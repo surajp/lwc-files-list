@@ -3,6 +3,11 @@
   <template if:true={showModal}>
     <section class="slds-modal slds-fade-in-open">
       <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <div class="slds-modal__close">
+            <lightning-button-icon icon-name="utility:close" alternative-text="Close" variant="brand" onclick={closeModal}></lightning-button-icon>
+          </div>
+        </header>
         <div class="slds-modal__content">
           <lightning-datatable key-field="id" data={versionDetails} columns={versionColumns}></lightning-datatable>
         </div>

@@ -5,16 +5,24 @@ import getFileVersionDetails from "@salesforce/apex/GetFilesController.getFileVe
 const actions = [{ label: "Version Details", name: "show_details" }];
 
 const columns = [
-  { label: "Title", fieldName: "title" },
-  { label: "Id", fieldName: "url", type: "url" },
+  {
+    label: "Id",
+    fieldName: "url",
+    type: "url",
+    typeAttributes: { label: { fieldName: "title" } }
+  },
   { label: "Uploaded Date", fieldName: "createdDate", type: "date" },
   { label: "Uploaded by", fieldName: "createdBy", type: "string" },
   { type: "action", typeAttributes: { rowActions: actions } }
 ];
 
 const versionColumns = [
-  { label: "Title", fieldName: "title" },
-  { label: "Download Link", fieldName: "url", type: "url" },
+  {
+    label: "Download Link",
+    fieldName: "url",
+    type: "url",
+    typeAttributes: { label: { fieldName: "title" } }
+  },
   { label: "Uploaded Date", fieldName: "createdDate", type: "date" },
   { label: "Uploaded by", fieldName: "createdBy", type: "string" }
 ];
@@ -35,6 +43,11 @@ export default class FilesRelatedList extends LightningElement {
       this.files = data;
       console.log("files found " + JSON.stringify(this.files));
     }
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.versionDetails = [];
   }
 
   handleRowAction(event) {
