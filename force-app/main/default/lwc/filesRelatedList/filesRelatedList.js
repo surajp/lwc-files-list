@@ -21,7 +21,7 @@ const versionColumns = [
     label: "Download Link",
     fieldName: "url",
     type: "url",
-    typeAttributes: { label: { fieldName: "title" } }
+    typeAttributes: { label: "Download" }
   },
   { label: "Uploaded Date", fieldName: "createdDate", type: "date" },
   { label: "Uploaded by", fieldName: "createdBy", type: "string" }
