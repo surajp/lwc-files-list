@@ -1,0 +1,13 @@
+<template>
+  <lightning-datatable columns={columns} key-field="id" data={files} onrowaction={handleRowAction}></lightning-datatable>
+  <template if:true={showModal}>
+    <section class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <div class="slds-modal__content">
+          <lightning-datatable key-field="id" data={versionDetails} columns={versionColumns}></lightning-datatable>
+        </div>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+</template>

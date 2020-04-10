@@ -1,0 +1,17 @@
+{
+  "trailingComma": "none",
+  "overrides": [
+    {
+      "files": "**/lwc/**/*.html",
+      "options": { "parser": "lwc","printWidth":160 }
+    },
+    {
+      "files": "*.{cmp,page,component}",
+      "options": { "parser": "html"}
+    },
+    {
+      "files": "*.{cls,trigger,apex}",
+      "options": { "parser": "apex","printWidth":160 }
+    }
+  ]
+}
