@@ -1,4 +1,5 @@
 <template>
+  <lightning-button label="New File" onclick={newFileUpload}></lightning-button>
   <lightning-datatable columns={columns} key-field="id" data={files} onrowaction={handleRowAction}></lightning-datatable>
   <template if:true={showModal}>
     <section class="slds-modal slds-fade-in-open">
@@ -9,7 +10,13 @@
           </div>
         </header>
         <div class="slds-modal__content">
-          <lightning-datatable key-field="id" data={versionDetails} columns={versionColumns}></lightning-datatable>
+          <template if:false={fileUpload}>
+            <lightning-datatable key-field="id" data={versionDetails} columns={versionColumns}></lightning-datatable>
+          </template>
+          <template if:true={fileUpload}>
+            <input type="file" name="file" />
+            <lightning-button onclick={handleUpload} label="Submit"></lightning-button>
+          </template>
         </div>
       </div>
     </section>

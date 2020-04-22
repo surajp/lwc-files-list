@@ -44,8 +44,8 @@ public with sharing class GetFilesController {
   public static FileVersionWrapper[] getFileVersionDetails(Id fileId) {
     /*{{{*/
     FileVersionWrapper[] contentversions = new List<FileVersionWrapper>{};
-    for (ContentVersion cv : [SELECT title, createddate, createdby.name FROM ContentVersion WHERE ContentDocumentId = :fileId]) {
-      contentVersions.add(new FileVersionWrapper(cv.Id, cv.title, cv.createdby.name, Date.valueOf(cv.createddate)));
+    for (ContentVersion cv : [SELECT title, createddate, createdby.name, VersionReason FROM ContentVersion WHERE ContentDocumentId = :fileId]) {
+      contentVersions.add(new FileVersionWrapper(cv.Id, cv.title, cv.createdby.name, Date.valueOf(cv.createddate), cv.VersionReason));
     }
     return contentVersions;
   } /*}}}*/
@@ -68,11 +68,12 @@ public with sharing class GetFilesController {
     }
 
     public FilesWrapper() {
+      /*{{{*/
       this.title = '';
       this.createdBy = '';
       this.createdDate = null;
       this.id = '';
-    }
+    } /*}}}*/
 
     public FilesWrapper(String id, String title, String createdBy, Date createdDate) {
       this.id = id;
@@ -92,6 +93,8 @@ public with sharing class GetFilesController {
     @AuraEnabled
     public Date createdDate { get; set; }
     @AuraEnabled
+    public String versionReason { get; set; }
+    @AuraEnabled
     public String url {
       get {
         return '/' + this.id;
@@ -100,17 +103,21 @@ public with sharing class GetFilesController {
     }
 
     public FileVersionWrapper() {
+      /*{{{*/
       this.title = '';
       this.createdBy = '';
       this.createdDate = null;
       this.id = '';
-    }
+      this.versionReason = '';
+    } /*}}}*/
 
-    public FileVersionWrapper(String id, String title, String createdBy, Date createdDate) {
+    public FileVersionWrapper(String id, String title, String createdBy, Date createdDate, String versionReason) {
+      /*{{{*/
       this.id = id;
       this.title = title;
       this.createdBy = createdBy;
       this.createdDate = createdDate;
-    }
+      this.versionReason = versionReason;
+    } /*}}}*/
   } /*}}}*/
 }
