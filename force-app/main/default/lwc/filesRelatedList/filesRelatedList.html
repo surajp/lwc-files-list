@@ -14,8 +14,27 @@
             <lightning-datatable key-field="id" data={versionDetails} columns={versionColumns}></lightning-datatable>
           </template>
           <template if:true={fileUpload}>
-            <input type="file" name="file" />
-            <lightning-button onclick={handleUpload} label="Submit"></lightning-button>
+            <lightning-layout multiple-rows="true">
+              <lightning-layout-item size="12" padding="around-small">
+                <input type="file" name="file" class="file" onchange={handleFileChange} />
+              </lightning-layout-item>
+              <lightning-layout-item size="12" padding="around-small">
+                <lightning-input
+                  type="text"
+                  class="text"
+                  label="Title"
+                  placeholder={fileName}
+                  value={fileTitle}
+                  onchange={handleFileNameChange}
+                ></lightning-input>
+              </lightning-layout-item>
+              <lightning-layout-item size="12" padding="around-small">
+                <lightning-input type="text" class="text" label="Reason for Change:"></lightning-input>
+              </lightning-layout-item>
+              <lightning-layout-item size="12" padding="around-small">
+                <lightning-button onclick={handleUpload} label="Submit"></lightning-button>
+              </lightning-layout-item>
+            </lightning-layout>
           </template>
         </div>
       </div>

@@ -40,12 +40,12 @@ public with sharing class GetFilesController {
     @param recordId Id of the content document whose version details are to be fetched
     @return list of file version wrapper objects, each representing a content version
   **/
-  @AuraEnabled(cacheable=true)
+  @AuraEnabled
   public static FileVersionWrapper[] getFileVersionDetails(Id fileId) {
     /*{{{*/
     FileVersionWrapper[] contentversions = new List<FileVersionWrapper>{};
-    for (ContentVersion cv : [SELECT title, createddate, createdby.name, VersionReason FROM ContentVersion WHERE ContentDocumentId = :fileId]) {
-      contentVersions.add(new FileVersionWrapper(cv.Id, cv.title, cv.createdby.name, Date.valueOf(cv.createddate), cv.VersionReason));
+    for (ContentVersion cv : [SELECT title, createddate, createdby.name, ReasonForChange FROM ContentVersion WHERE ContentDocumentId = :fileId]) {
+      contentVersions.add(new FileVersionWrapper(cv.Id, cv.title, cv.createdby.name, Date.valueOf(cv.createddate), cv.ReasonForChange));
     }
     return contentVersions;
   } /*}}}*/
@@ -93,7 +93,7 @@ public with sharing class GetFilesController {
     @AuraEnabled
     public Date createdDate { get; set; }
     @AuraEnabled
-    public String versionReason { get; set; }
+    public String reasonForChange { get; set; }
     @AuraEnabled
     public String url {
       get {
@@ -108,16 +108,23 @@ public with sharing class GetFilesController {
       this.createdBy = '';
       this.createdDate = null;
       this.id = '';
-      this.versionReason = '';
+      this.reasonForChange = '';
     } /*}}}*/
 
-    public FileVersionWrapper(String id, String title, String createdBy, Date createdDate, String versionReason) {
+    public FileVersionWrapper(String id, String title, String createdBy, Date createdDate, String reasonForChange) {
       /*{{{*/
       this.id = id;
       this.title = title;
       this.createdBy = createdBy;
       this.createdDate = createdDate;
-      this.versionReason = versionReason;
+      this.reasonForChange = reasonForChange;
     } /*}}}*/
   } /*}}}*/
+
+  @AuraEnabled
+  public static Id createContentDocLink(Id contentVersionId, Id recordId) {
+    Id docId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id = :contentVersionId].ContentDocumentId;
+    insert new ContentDocumentLink(ContentDocumentId = docId, LinkedEntityId = recordId);
+    return docId;
+  }
 }
