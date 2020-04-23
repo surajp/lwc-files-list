@@ -1,7 +1,7 @@
 {
   "orgName": "Demo company",
   "edition": "Developer",
-  "features": [],
+  "features": ["AuthorApex"],
   "settings":{
   	"lightningExperienceSettings":{
   		"enableS1DesktopEnabled": true
