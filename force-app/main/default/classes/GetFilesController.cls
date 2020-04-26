@@ -28,7 +28,8 @@ public with sharing class GetFilesController {
           link.ContentDocumentId,
           link.ContentDocument.LatestPublishedVersion.Title,
           link.ContentDocument.LatestPublishedVersion.CreatedBy.Name,
-          Date.valueOf(link.ContentDocument.LatestPublishedVersion.CreatedDate)
+          Date.valueOf(link.ContentDocument.LatestPublishedVersion.CreatedDate),
+          link.ContentDocument.LatestPublishedVersionId
         )
       );
     }
@@ -60,6 +61,8 @@ public with sharing class GetFilesController {
     @AuraEnabled
     public Date createdDate { get; set; }
     @AuraEnabled
+    public String latestVersionId { get; set; }
+    @AuraEnabled
     public String url {
       get {
         return '/' + this.id;
@@ -75,11 +78,12 @@ public with sharing class GetFilesController {
       this.id = '';
     } /*}}}*/
 
-    public FilesWrapper(String id, String title, String createdBy, Date createdDate) {
+    public FilesWrapper(String id, String title, String createdBy, Date createdDate, String latestVersionId) {
       this.id = id;
       this.title = title;
       this.createdBy = createdBy;
       this.createdDate = createdDate;
+      this.latestVersionId = latestVersionId;
     }
   } /*}}}*/
 

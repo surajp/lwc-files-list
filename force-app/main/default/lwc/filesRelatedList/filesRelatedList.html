@@ -1,6 +1,7 @@
 <template>
   <lightning-button label="New File" onclick={newFileUpload}></lightning-button>
-  <lightning-datatable columns={columns} key-field="id" data={files} onrowaction={handleRowAction}></lightning-datatable>
+  <lightning-button label="Delete" onclick={deleteFiles}></lightning-button>
+  <c-custom-datatable columns={columns} key-field="id" data={files} onrowaction={handleRowAction} resize-column-disabled></c-custom-datatable>
   <template if:true={showModal}>
     <section class="slds-modal slds-fade-in-open">
       <div class="slds-modal__container">
@@ -11,7 +12,7 @@
         </header>
         <div class="slds-modal__content">
           <template if:false={fileUpload}>
-            <lightning-datatable key-field="id" data={versionDetails} columns={versionColumns}></lightning-datatable>
+            <c-custom-datatable key-field="id" data={versionDetails} columns={versionColumns}></c-custom-datatable>
           </template>
           <template if:true={fileUpload}>
             <lightning-layout multiple-rows="true">

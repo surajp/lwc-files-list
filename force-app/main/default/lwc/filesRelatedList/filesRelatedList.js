@@ -16,9 +16,12 @@ const BASE64EXP = new RegExp(/^data(.*)base64,/);
 const columns = [
   {
     label: "Id",
-    fieldName: "url",
-    type: "url",
-    typeAttributes: { label: { fieldName: "title" } }
+    fieldName: "id",
+    type: "filePreview",
+    typeAttributes: {
+      anchorText: { fieldName: "title" },
+      versionId: { fieldName: "latestVersionId" }
+    }
   },
   { label: "Uploaded Date", fieldName: "createdDate", type: "date" },
   { label: "Uploaded by", fieldName: "createdBy", type: "string" },
@@ -28,9 +31,9 @@ const columns = [
 const versionColumns = [
   {
     label: "Download Link",
-    fieldName: "url",
-    type: "url",
-    typeAttributes: { label: "Download" }
+    fieldName: "id",
+    type: "filePreview",
+    typeAttributes: { anchorText: "Download" }
   },
   { label: "Title", fieldName: "title", type: "string" },
   { label: "Reason for Change", fieldName: "reasonForChange", type: "string" },
@@ -52,18 +55,22 @@ export default class FilesRelatedList extends LightningElement {
   versionDetails = [];
   fileUpload = false;
   _currentDocId = null;
+  showPreview = false;
+  currentPreviewFileId = null;
 
   handleFileNameChange(event) {
     this.fileTitle = event.detail.value;
   }
 
   handleFileChange() {
+    //{{{
     const inpFiles = this.template.querySelector("input.file").files;
     if (inpFiles && inpFiles.length > 0) this.fileName = inpFiles[0].name;
-  }
+  } //}}}
 
   @wire(getRelatedFiles, { recordId: "$recordId" })
   getFilesList(filesList) {
+    //{{{
     this._filesList = filesList;
     const { error, data } = filesList;
     //{{{
@@ -71,7 +78,7 @@ export default class FilesRelatedList extends LightningElement {
       this.files = data;
       console.log("files found " + JSON.stringify(this.files));
     }
-  } //}}}
+  } //}}}}}}
 
   closeModal() {
     //{{{
@@ -101,7 +108,24 @@ export default class FilesRelatedList extends LightningElement {
     }
   } //}}}
 
+  deleteFiles() {
+    //{{{
+    const selectedRowIds = this.template
+      .querySelector("c-custom-datatable")
+      .getSelectedRows()
+      .map((row) => row.id);
+    if (selectedRowIds.length > 0) {
+      let decision = confirm(
+        `Are you sure you want to delete ${selectedRowIds.length} records?`
+      );
+      if (decision) {
+        this._deleteRecord(selectedRowIds);
+      }
+    }
+  } //}}}
+
   _deleteRecord(recordIds) {
+    //{{{
     Promise.all(recordIds.map((id) => deleteRecord(id)))
       .then(() => {
         refreshApex(this._filesList);
@@ -122,7 +146,7 @@ export default class FilesRelatedList extends LightningElement {
           })
         );
       });
-  }
+  } //}}}
 
   newFileUpload() {
     //{{{
@@ -195,6 +219,7 @@ export default class FilesRelatedList extends LightningElement {
   } //}}}
 
   _createContentDocLink(cvId) {
+    //{{{
     createContentDocLink({
       contentVersionId: cvId,
       recordId: this.recordId
@@ -218,5 +243,5 @@ export default class FilesRelatedList extends LightningElement {
           })
         );
       });
-  }
+  } //}}}
 }

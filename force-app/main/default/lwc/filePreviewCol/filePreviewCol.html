@@ -1,0 +1,8 @@
+<template>
+  <a href={url} onmouseover={handleMouseOver} onmouseout={handleMouseOut}>{label}</a>
+  <template if:true={showPreview}>
+    <div class="overlay">
+      <c-file-preview-comp file-id={fileOrVersionId} height-in-rem="1.25"></c-file-preview-comp>
+    </div>
+  </template>
+</template>
