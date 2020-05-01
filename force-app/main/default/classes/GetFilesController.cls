@@ -51,7 +51,7 @@ public with sharing class GetFilesController {
     return contentVersions;
   } /*}}}*/
 
-  class FilesWrapper /*{{{*/ {
+  public class FilesWrapper /*{{{*/ {
     @AuraEnabled
     public String id { get; set; }
     @AuraEnabled
@@ -62,21 +62,6 @@ public with sharing class GetFilesController {
     public Date createdDate { get; set; }
     @AuraEnabled
     public String latestVersionId { get; set; }
-    @AuraEnabled
-    public String url {
-      get {
-        return '/' + this.id;
-      }
-      set;
-    }
-
-    public FilesWrapper() {
-      /*{{{*/
-      this.title = '';
-      this.createdBy = '';
-      this.createdDate = null;
-      this.id = '';
-    } /*}}}*/
 
     public FilesWrapper(String id, String title, String createdBy, Date createdDate, String latestVersionId) {
       this.id = id;
@@ -87,7 +72,7 @@ public with sharing class GetFilesController {
     }
   } /*}}}*/
 
-  class FileVersionWrapper /*{{{*/ {
+  public class FileVersionWrapper /*{{{*/ {
     @AuraEnabled
     public String id { get; set; }
     @AuraEnabled
@@ -98,22 +83,6 @@ public with sharing class GetFilesController {
     public Date createdDate { get; set; }
     @AuraEnabled
     public String reasonForChange { get; set; }
-    @AuraEnabled
-    public String url {
-      get {
-        return '/' + this.id;
-      }
-      set;
-    }
-
-    public FileVersionWrapper() {
-      /*{{{*/
-      this.title = '';
-      this.createdBy = '';
-      this.createdDate = null;
-      this.id = '';
-      this.reasonForChange = '';
-    } /*}}}*/
 
     public FileVersionWrapper(String id, String title, String createdBy, Date createdDate, String reasonForChange) {
       /*{{{*/

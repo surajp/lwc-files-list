@@ -73,12 +73,11 @@ export default class FilesRelatedList extends LightningElement {
     //{{{
     this._filesList = filesList;
     const { error, data } = filesList;
-    //{{{
     if (!error && data) {
       this.files = data;
       console.log("files found " + JSON.stringify(this.files));
     }
-  } //}}}}}}
+  } //}}}
 
   closeModal() {
     //{{{
@@ -111,7 +110,7 @@ export default class FilesRelatedList extends LightningElement {
   deleteFiles() {
     //{{{
     const selectedRowIds = this.template
-      .querySelector("c-custom-datatable")
+      .querySelector("c-custom-datatable[data-tablename='filestable']")
       .getSelectedRows()
       .map((row) => row.id);
     if (selectedRowIds.length > 0) {
