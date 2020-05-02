@@ -16,7 +16,7 @@ export default class FilePreviewComp extends LightningElement {
   }
 
   fallback(event) {
-    if (event.target.src != NOPREVIEWIMGURL) {
+    if (event.target.src !== NOPREVIEWIMGURL) {
       event.target.src = NOPREVIEWIMGURL;
       this.template.querySelector("img").style.width = "200px";
       this.template.querySelector("img").style.height = "100px";
