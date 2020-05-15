@@ -1,6 +1,7 @@
 import { LightningElement, api } from "lwc";
 import { baseNavigation } from "lightning/datatableKeyboardMixins";
 import template from "./filePreviewCol.html";
+import { getDownloadUrl, getContentDocUrl } from "c/fileUtils";
 
 export default class FilePreviewCol extends LightningElement {
   showPreview = false;
@@ -9,7 +10,11 @@ export default class FilePreviewCol extends LightningElement {
   @api versionId = "";
 
   get url() {
-    return this.fileId ? "/" + this.fileId : "#";
+    return this.fileId
+      ? this.fileId.startsWith("069")
+        ? getContentDocUrl(this.fileId)
+        : getDownloadUrl(this.fileId)
+      : "#";
   }
 
   get fileOrVersionId() {

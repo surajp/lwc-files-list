@@ -171,8 +171,9 @@ export default class FilesRelatedList extends LightningElement {
     //{{{
     event.preventDefault();
     const file = this.template.querySelector("input.file").files[0];
-    const reasonForChange = this.template.querySelector("lightning-input.text")
-      .value;
+    const reasonForChange = this.template.querySelector(
+      "lightning-input.reason"
+    ).value;
     const reader = new FileReader();
     let fileData = "";
     reader.onload = () => {

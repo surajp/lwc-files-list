@@ -1,5 +1,6 @@
 import { LightningElement, api } from "lwc";
 import NOPREVIEWIMGURL from "@salesforce/resourceUrl/nopreviewimg";
+import { getPreviewUrl } from "c/fileUtils";
 
 export default class FilePreviewComp extends LightningElement {
   @api fileId;
@@ -12,7 +13,7 @@ export default class FilePreviewComp extends LightningElement {
   }
 
   get url() {
-    return `${this.baseUrl}/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=${this.fileId}&operationContext=CHATTER&page=0`;
+    return getPreviewUrl(this.fileId);
   }
 
   fallback(event) {
