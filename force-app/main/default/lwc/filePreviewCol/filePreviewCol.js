@@ -1,20 +1,24 @@
 import { LightningElement, api } from "lwc";
-import { baseNavigation } from "lightning/datatableKeyboardMixins";
-import template from "./filePreviewCol.html";
-import { getDownloadUrl, getContentDocUrl } from "c/fileUtils";
+import { NavigationMixin } from "lightning/navigation";
 
-export default class FilePreviewCol extends LightningElement {
+export default class FilePreviewCol extends NavigationMixin(LightningElement) {
   showPreview = false;
-  @api fileId = "";
   @api label = "";
   @api versionId = "";
+  @api fileId = "";
 
-  get url() {
-    return this.fileId
-      ? this.fileId.startsWith("069")
-        ? getContentDocUrl(this.fileId)
-        : getDownloadUrl(this.fileId)
-      : "#";
+  navigateToFile(event) {
+    event.preventDefault();
+    this[NavigationMixin.Navigate]({
+      type: "standard__namedPage",
+      attributes: {
+        pageName: "filePreview"
+      },
+      state: {
+        recordIds: this.fileId,
+        selectedRecordId: this.fileId
+      }
+    });
   }
 
   get fileOrVersionId() {

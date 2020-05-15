@@ -112,7 +112,7 @@ export default class FilesRelatedList extends LightningElement {
     const selectedRowIds = this.template
       .querySelector("c-custom-datatable[data-tablename='filestable']")
       .getSelectedRows()
-      .map((row) => row.id);
+      .map(row => row.id);
     if (selectedRowIds.length > 0) {
       let decision = confirm(
         `Are you sure you want to delete ${selectedRowIds.length} records?`
@@ -125,7 +125,7 @@ export default class FilesRelatedList extends LightningElement {
 
   _deleteRecord(recordIds) {
     //{{{
-    Promise.all(recordIds.map((id) => deleteRecord(id)))
+    Promise.all(recordIds.map(id => deleteRecord(id)))
       .then(() => {
         refreshApex(this._filesList);
         this.dispatchEvent(
@@ -135,7 +135,7 @@ export default class FilesRelatedList extends LightningElement {
           })
         );
       })
-      .catch((err) => {
+      .catch(err => {
         this.dispatchEvent(
           new ShowToastEvent({
             variant: "error",
@@ -157,12 +157,12 @@ export default class FilesRelatedList extends LightningElement {
     //{{{
     console.log(">> file version details");
     getFileVersionDetails({ fileId: this._currentDocId })
-      .then((result) => {
+      .then(result => {
         console.log(">> version details " + JSON.stringify(result));
         this.versionDetails = result;
         this.showModal = true;
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(JSON.stringify(err));
       });
   } //}}}
@@ -195,7 +195,7 @@ export default class FilesRelatedList extends LightningElement {
       payload.ContentDocumentId = this._currentDocId;
     }
     createRecord({ apiName: "ContentVersion", fields: payload })
-      .then((cVersion) => {
+      .then(cVersion => {
         if (!this._currentDocId) {
           this._createContentDocLink(cVersion.id);
         } else {
@@ -208,7 +208,7 @@ export default class FilesRelatedList extends LightningElement {
           );
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.dispatchEvent(
           new ShowToastEvent({
             variant: "error",
@@ -224,7 +224,7 @@ export default class FilesRelatedList extends LightningElement {
       contentVersionId: cvId,
       recordId: this.recordId
     })
-      .then((cId) => {
+      .then(cId => {
         this.closeModal();
         this.dispatchEvent(
           new ShowToastEvent({
@@ -233,7 +233,7 @@ export default class FilesRelatedList extends LightningElement {
           })
         );
       })
-      .catch((err) => {
+      .catch(err => {
         this.dispatchEvent(
           new ShowToastEvent({
             variant: "error",
