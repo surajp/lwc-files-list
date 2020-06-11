@@ -2,12 +2,12 @@ import { LightningElement, wire, api } from "lwc";
 import getRelatedFiles from "@salesforce/apex/GetFilesController.getFilesList";
 import getFileVersionDetails from "@salesforce/apex/GetFilesController.getFileVersionDetails";
 import createContentDocLink from "@salesforce/apex/GetFilesController.createContentDocLink";
-import { deleteRecord, getRecord, createRecord } from "lightning/uiRecordApi";
+import { deleteRecord, createRecord } from "lightning/uiRecordApi";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { refreshApex } from "@salesforce/apex";
 
 const actions = [
-  { label: "Version Details", name: "show_details" },
+  { label: "Version History", name: "show_details" },
   { label: "Upload New Version", name: "upload_version" },
   { label: "Delete File", name: "delete" }
 ];
@@ -57,6 +57,7 @@ export default class FilesRelatedList extends LightningElement {
   _currentDocId = null;
   showPreview = false;
   currentPreviewFileId = null;
+  showSpinner = false;
 
   handleFileNameChange(event) {
     this.fileTitle = event.detail.value;
@@ -96,13 +97,13 @@ export default class FilesRelatedList extends LightningElement {
     const action = event.detail.action.name;
     const row = event.detail.row;
     this._currentDocId = row.id;
-    if (action == "show_details") {
+    if (action === "show_details") {
       this.fileUpload = false;
       this.showVersionDetails();
-    } else if (action == "upload_version") {
+    } else if (action === "upload_version") {
       this.fileUpload = true;
       this.showModal = true;
-    } else if (action == "delete") {
+    } else if (action === "delete") {
       this._deleteRecord([this._currentDocId]);
     }
   } //}}}
@@ -112,8 +113,9 @@ export default class FilesRelatedList extends LightningElement {
     const selectedRowIds = this.template
       .querySelector("c-custom-datatable[data-tablename='filestable']")
       .getSelectedRows()
-      .map(row => row.id);
+      .map((row) => row.id);
     if (selectedRowIds.length > 0) {
+      //eslint-disable-next-line
       let decision = confirm(
         `Are you sure you want to delete ${selectedRowIds.length} records?`
       );
@@ -125,7 +127,7 @@ export default class FilesRelatedList extends LightningElement {
 
   _deleteRecord(recordIds) {
     //{{{
-    Promise.all(recordIds.map(id => deleteRecord(id)))
+    Promise.all(recordIds.map((id) => deleteRecord(id)))
       .then(() => {
         refreshApex(this._filesList);
         this.dispatchEvent(
@@ -135,7 +137,7 @@ export default class FilesRelatedList extends LightningElement {
           })
         );
       })
-      .catch(err => {
+      .catch((err) => {
         this.dispatchEvent(
           new ShowToastEvent({
             variant: "error",
@@ -157,12 +159,12 @@ export default class FilesRelatedList extends LightningElement {
     //{{{
     console.log(">> file version details");
     getFileVersionDetails({ fileId: this._currentDocId })
-      .then(result => {
+      .then((result) => {
         console.log(">> version details " + JSON.stringify(result));
         this.versionDetails = result;
         this.showModal = true;
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(JSON.stringify(err));
       });
   } //}}}
@@ -170,17 +172,29 @@ export default class FilesRelatedList extends LightningElement {
   handleUpload(event) {
     //{{{
     event.preventDefault();
-    const file = this.template.querySelector("input.file").files[0];
-    const reasonForChange = this.template.querySelector(
-      "lightning-input.reason"
-    ).value;
-    const reader = new FileReader();
-    let fileData = "";
-    reader.onload = () => {
-      fileData = reader.result;
-      this._uploadFile(file, fileData, reasonForChange);
-    };
-    reader.readAsDataURL(file);
+    this.showSpinner = true;
+    try {
+      const file = this.template.querySelector("input.file").files[0];
+      const reasonForChange = this.template.querySelector(
+        "lightning-input.reason"
+      ).value;
+      const reader = new FileReader();
+      let fileData = "";
+      reader.onload = () => {
+        fileData = reader.result;
+        this._uploadFile(file, fileData, reasonForChange);
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error(err);
+      this.dispatchEvent(
+        new ShowToastEvent({
+          variant: "error",
+          message: `File upload failed: ${err.body.message || err.body.error}`
+        })
+      );
+      this.showSpinner = false;
+    }
   } //}}}
 
   _uploadFile(file, fileData, reasonForChange) {
@@ -195,7 +209,8 @@ export default class FilesRelatedList extends LightningElement {
       payload.ContentDocumentId = this._currentDocId;
     }
     createRecord({ apiName: "ContentVersion", fields: payload })
-      .then(cVersion => {
+      .then((cVersion) => {
+        this.showSpinner = false;
         if (!this._currentDocId) {
           this._createContentDocLink(cVersion.id);
         } else {
@@ -208,13 +223,14 @@ export default class FilesRelatedList extends LightningElement {
           );
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.dispatchEvent(
           new ShowToastEvent({
             variant: "error",
-            message: `An error occurred: ${err.body.message || err.body.error}`
+            message: `File upload failed: ${err.body.message || err.body.error}`
           })
         );
+        this.showSpinner = false;
       });
   } //}}}
 
@@ -224,7 +240,7 @@ export default class FilesRelatedList extends LightningElement {
       contentVersionId: cvId,
       recordId: this.recordId
     })
-      .then(cId => {
+      .then((cId) => {
         this.closeModal();
         this.dispatchEvent(
           new ShowToastEvent({
@@ -233,7 +249,7 @@ export default class FilesRelatedList extends LightningElement {
           })
         );
       })
-      .catch(err => {
+      .catch((err) => {
         this.dispatchEvent(
           new ShowToastEvent({
             variant: "error",

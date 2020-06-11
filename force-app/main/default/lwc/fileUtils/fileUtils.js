@@ -9,7 +9,7 @@ const getDownloadUrl = (fileId) => {
 };
 
 const getPreviewUrl = (fileId) => {
-  return `${getDocBaseUrl()}/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=${fileId}&operationContext=CHATTER&page=0`;
+  return `${getDocBaseUrl()}/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB240BY180&versionId=${fileId}&operationContext=CHATTER&page=0`;
 };
 
 const getContentDocUrl = (fileId) => {

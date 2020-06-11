@@ -1,14 +1,16 @@
 <template>
-  <lightning-button label="New File" onclick={newFileUpload}></lightning-button>
-  <lightning-button label="Delete" onclick={deleteFiles}></lightning-button>
-  <c-custom-datatable
-    columns={columns}
-    key-field="id"
-    data={files}
-    onrowaction={handleRowAction}
-    data-tablename="filestable"
-    resize-column-disabled
-  ></c-custom-datatable>
+  <lightning-card>
+    <lightning-button slot="actions" label="Delete" onclick={deleteFiles}></lightning-button>
+    <lightning-button slot="actions" label="New File" onclick={newFileUpload} variant="brand"></lightning-button>
+    <c-custom-datatable
+      columns={columns}
+      key-field="id"
+      data={files}
+      onrowaction={handleRowAction}
+      data-tablename="filestable"
+      resize-column-disabled
+    ></c-custom-datatable>
+  </lightning-card>
   <template if:true={showModal}>
     <section class="slds-modal slds-fade-in-open">
       <div class="slds-modal__container">
@@ -18,11 +20,14 @@
           </div>
         </header>
         <div class="slds-modal__content">
+          <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+          </template>
           <template if:false={fileUpload}>
             <c-custom-datatable key-field="id" data={versionDetails} columns={versionColumns} data-tablename="versiontable"></c-custom-datatable>
           </template>
           <template if:true={fileUpload}>
-            <lightning-layout multiple-rows="true">
+            <lightning-layout multiple-rows="true" horizontal-align="end">
               <lightning-layout-item size="12" padding="around-small">
                 <input type="file" name="file" class="file" onchange={handleFileChange} />
               </lightning-layout-item>
@@ -40,7 +45,7 @@
                 <lightning-input type="text" class="reason" label="Reason for Change:"></lightning-input>
               </lightning-layout-item>
               <lightning-layout-item size="12" padding="around-small">
-                <lightning-button onclick={handleUpload} label="Submit"></lightning-button>
+                <lightning-button onclick={handleUpload} label="Submit" variant="brand" class="slds-float_right"></lightning-button>
               </lightning-layout-item>
             </lightning-layout>
           </template>
